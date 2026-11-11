@@ -191,11 +191,8 @@ namespace Lab4
             {
                 return true;
             }
-            if (first is null || second is null)
-            {
-                return false;
-            }
-            return first._a == second._a
+            return first is not null && second is not null
+                && first._a == second._a
                 && first._b == second._b
                 && first._c == second._c;
         }

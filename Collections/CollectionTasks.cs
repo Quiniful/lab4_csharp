@@ -81,7 +81,6 @@ namespace Lab4
             const string vowels = "аеёиоуыэюя";
             int[] occurrences = new int[vowels.Length];
             HashSet<char> word = new HashSet<char>();
-            bool inWord = false;
             int code;
             char symbol;
             using StreamReader reader = new StreamReader(
@@ -91,17 +90,15 @@ namespace Lab4
                 symbol = char.ToLowerInvariant((char)code);
                 if (IsRussianLetter(symbol))
                 {
-                    inWord = true;
                     word.Add(symbol);
                 }
-                else if (inWord)
+                else if (word.Count > 0)
                 {
                     CountOccurrences(word, occurrences, vowels);
                     word.Clear();
-                    inWord = false;
                 }
             }
-            if (inWord)
+            if (word.Count > 0)
             {
                 CountOccurrences(word, occurrences, vowels);
             }
@@ -268,14 +265,9 @@ namespace Lab4
             int score, string name)
         {
             (int Count, string Name) group;
-            if (leaders.TryGetValue(score, out group))
-            {
-                leaders[score] = (group.Count + 1, group.Name);
-            }
-            else
-            {
-                leaders.Add(score, (1, name));
-            }
+            leaders.TryGetValue(score, out group);
+            leaders[score] = (group.Count + 1,
+                group.Count == 0 ? name : group.Name);
             if (leaders.Count > 2)
             {
                 int minimum = int.MaxValue;

@@ -40,16 +40,11 @@ namespace Lab4
                 {
                     Execute(command);
                 }
-                catch (IOException error)
-                    when (error is not EndOfStreamException)
-                {
-                    Console.WriteLine(error.Message);
-                }
-                catch (UnauthorizedAccessException error)
-                {
-                    Console.WriteLine(error.Message);
-                }
-                catch (FormatException error)
+                catch (Exception error) when (
+                    error is IOException
+                        and not EndOfStreamException
+                    or UnauthorizedAccessException
+                    or FormatException)
                 {
                     Console.WriteLine(error.Message);
                 }
@@ -93,9 +88,8 @@ namespace Lab4
 
         private void ShowDuplicates()
         {
-            List<int> values = ReadList();
             Console.WriteLine(
-                CollectionTasks.HasDuplicates(values)
+                CollectionTasks.HasDuplicates(ReadList())
                 ? "Одинаковые элементы есть."
                 : "Одинаковых элементов нет.");
         }

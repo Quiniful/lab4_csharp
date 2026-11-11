@@ -50,11 +50,9 @@ namespace Lab4
                 {
                     Execute(command, ref equation);
                 }
-                catch (ArgumentException error)
-                {
-                    Console.WriteLine(error.Message);
-                }
-                catch (OverflowException error)
+                catch (Exception error) when (
+                    error is ArgumentException
+                    or OverflowException)
                 {
                     Console.WriteLine(error.Message);
                 }
