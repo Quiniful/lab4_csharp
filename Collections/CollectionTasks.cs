@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -78,7 +79,7 @@ namespace Lab4
         public static string FindVowels(string path)
         {
             const string vowels = "аеёиоуыэюя";
-            int[] missing = new int[vowels.Length];
+            int[] occurrences = new int[vowels.Length];
             HashSet<char> word = new HashSet<char>();
             bool inWord = false;
             int code;
@@ -95,19 +96,19 @@ namespace Lab4
                 }
                 else if (inWord)
                 {
-                    CountMissing(word, missing, vowels);
+                    CountOccurrences(word, occurrences, vowels);
                     word.Clear();
                     inWord = false;
                 }
             }
             if (inWord)
             {
-                CountMissing(word, missing, vowels);
+                CountOccurrences(word, occurrences, vowels);
             }
             StringBuilder result = new StringBuilder();
             for (int index = 0; index < vowels.Length; index++)
             {
-                if (missing[index] > 1)
+                if (occurrences[index] <= 1)
                 {
                     result.Append(vowels[index]);
                 }
@@ -121,15 +122,15 @@ namespace Lab4
                 || symbol == 'ё';
         }
 
-        private static void CountMissing(HashSet<char> word,
-            int[] missing, string vowels)
+        private static void CountOccurrences(HashSet<char> word,
+            int[] occurrences, string vowels)
         {
             for (int index = 0; index < vowels.Length; index++)
             {
-                if (!word.Contains(vowels[index])
-                    && missing[index] < 2)
+                if (word.Contains(vowels[index])
+                    && occurrences[index] < 2)
                 {
-                    missing[index]++;
+                    occurrences[index]++;
                 }
             }
         }
@@ -148,9 +149,11 @@ namespace Lab4
             if (parts.Length != 4
                 || !IsName(parts[0], 20)
                 || !IsName(parts[1], 15)
-                || !int.TryParse(parts[2], out grade)
+                || !int.TryParse(parts[2], NumberStyles.None,
+                    CultureInfo.InvariantCulture, out grade)
                 || grade < 7 || grade > 11
-                || !int.TryParse(parts[3], out score)
+                || !int.TryParse(parts[3], NumberStyles.None,
+                    CultureInfo.InvariantCulture, out score)
                 || score < 0)
             {
                 return false;
@@ -167,13 +170,12 @@ namespace Lab4
             }
             foreach (char symbol in value)
             {
-                if (!char.IsLetter(symbol) && symbol != '-')
+                if (char.IsWhiteSpace(symbol))
                 {
                     return false;
                 }
             }
-            return char.IsLetter(value[0])
-                && char.IsLetter(value[value.Length - 1]);
+            return true;
         }
 
         public static void FillOlympiadFile(string path)
@@ -195,7 +197,7 @@ namespace Lab4
                 {
                     Console.WriteLine(
                         "Ошибка формата: имя до 15, "
-                        + "фамилия до 20 букв, класс 7-11, "
+                        + "фамилия до 20 символов, класс 7-11, "
                         + "баллы 0-2147483647; один пробел.");
                     line = ConsoleInput.ReadLine("Повторите: ");
                 }

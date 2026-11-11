@@ -82,9 +82,32 @@ namespace Lab4
 
         private double GetDiscriminant()
         {
-            double result = _b * _b - 4 * _a * _c;
+            int exponent;
+            double discriminant = GetScaledDiscriminant(
+                out _, out _, out _, out exponent);
+            double result = Math.ScaleB(
+                discriminant, 2 * exponent);
             CheckResult(result);
             return result;
+        }
+
+        private double GetScaledDiscriminant(out double a,
+            out double b, out double c, out int exponent)
+        {
+            double maximum = Math.Max(Math.Abs(_a),
+                Math.Max(Math.Abs(_b), Math.Abs(_c)));
+            exponent = Math.ILogB(maximum);
+            a = Math.ScaleB(_a, -exponent);
+            b = Math.ScaleB(_b, -exponent);
+            c = Math.ScaleB(_c, -exponent);
+            if (a == 0 || b == 0 && _b != 0
+                || c == 0 && _c != 0)
+            {
+                throw new OverflowException(
+                    "Разброс коэффициентов слишком велик "
+                    + "для вычислений double.");
+            }
+            return b * b - 4 * a * c;
         }
 
         private static void CheckResult(double value)
@@ -99,21 +122,25 @@ namespace Lab4
 
         public double[] FindRoots()
         {
-            double discriminant = GetDiscriminant();
+            double a;
+            double b;
+            double c;
+            double discriminant = GetScaledDiscriminant(
+                out a, out b, out c, out _);
             if (discriminant < 0)
             {
                 return Array.Empty<double>();
             }
             if (discriminant == 0)
             {
-                double root = -(_b / 2) / _a;
+                double root = -(b / 2) / a;
                 CheckResult(root);
                 return new double[] { root };
             }
-            double q = -0.5 * (_b + Math.CopySign(
-                Math.Sqrt(discriminant), _b));
-            double first = q / _a;
-            double second = _c / q;
+            double q = -0.5 * (b + Math.CopySign(
+                Math.Sqrt(discriminant), b));
+            double first = q / a;
+            double second = c / q;
             CheckResult(first);
             CheckResult(second);
             return first <= second
@@ -153,7 +180,8 @@ namespace Lab4
             QuadraticEquation equation)
         {
             ArgumentNullException.ThrowIfNull(equation);
-            return equation.GetDiscriminant() >= 0;
+            return equation.GetScaledDiscriminant(
+                out _, out _, out _, out _) >= 0;
         }
 
         public static bool operator ==(

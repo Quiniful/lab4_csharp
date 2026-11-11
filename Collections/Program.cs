@@ -181,8 +181,8 @@ namespace Lab4
             string result = CollectionTasks.FindVowels(
                 "data/text.txt");
             Console.WriteLine(
-                "Гласные, отсутствующие "
-                + "более чем в одном слове:");
+                "Гласные, встречающиеся "
+                + "не более чем в одном слове:");
             Console.WriteLine(result.Length == 0
                 ? "Таких букв нет." : result);
         }
