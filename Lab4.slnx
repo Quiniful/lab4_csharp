@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Collections/Collections.csproj" />
+  <Project Path="Equations/Equations.csproj" />
+</Solution>
