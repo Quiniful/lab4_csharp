@@ -8,11 +8,11 @@ namespace Lab4
 {
     public static class CollectionTasks
     {
-        public static bool HasDuplicates(List<int> values)
+        public static bool HasDuplicates<T>(List<T> values)
         {
             ArgumentNullException.ThrowIfNull(values);
-            HashSet<int> found = new HashSet<int>();
-            foreach (int value in values)
+            HashSet<T> found = new HashSet<T>();
+            foreach (T value in values)
             {
                 if (!found.Add(value))
                 {
@@ -22,8 +22,8 @@ namespace Lab4
             return false;
         }
 
-        public static bool RemoveFirst(
-            LinkedList<int> values, int value)
+        public static bool RemoveFirst<T>(
+            LinkedList<T> values, T value)
         {
             ArgumentNullException.ThrowIfNull(values);
             return values.Remove(value);

@@ -73,14 +73,14 @@ namespace Lab4
             }
         }
 
-        private List<int> ReadList()
+        private List<string> ReadList()
         {
             int count = ConsoleInput.ReadRange(
                 "Число элементов (0-10000): ", 0, 10000);
-            List<int> values = new List<int>(count);
+            List<string> values = new List<string>(count);
             for (int index = 0; index < count; index++)
             {
-                values.Add(ConsoleInput.ReadInt(
+                values.Add(ConsoleInput.ReadLine(
                     $"Элемент {index + 1}: "));
             }
             return values;
@@ -96,9 +96,9 @@ namespace Lab4
 
         private void ShowRemoval()
         {
-            LinkedList<int> values = new LinkedList<int>(
+            LinkedList<string> values = new LinkedList<string>(
                 ReadList());
-            int value = ConsoleInput.ReadInt(
+            string value = ConsoleInput.ReadLine(
                 "Удалить элемент: ");
             Console.WriteLine(CollectionTasks.RemoveFirst(
                 values, value) ? "Элемент удалён."
